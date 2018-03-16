@@ -7,7 +7,6 @@ var rootPath = ".."
 var projectName = "org.franca.compdeploymodel.dsl"
 
 Workflow {
-	
 	component = XtextGenerator {
 		configuration = {
 			project = StandardProjectConfig {
