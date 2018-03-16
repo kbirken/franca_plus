@@ -1,35 +1,31 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Franca Component Deployment Model plugin
+Bundle-Name: org.franca.compdeploymodel.dsl
 Bundle-Vendor: itemis AG
-Bundle-Version: 0.12.0.qualifier
-Bundle-SymbolicName: org.franca.compdeploymodel.dsl;singleton:=true
+Bundle-Version: 0.7.0.qualifier
+Bundle-SymbolicName: org.franca.compdeploymodel.dsl; singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.franca.core.dsl;bundle-version="0.9.1";visibility:=reexport,
- org.franca.compmodel.dsl;bundle-version="0.12.0",
- org.eclipse.xtext.generator;bundle-version="[2.11.0,2.12.0)";resolution:=optional,
- org.eclipse.emf.mwe2.launch;bundle-version="2.8.0";resolution:=optional,
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.franca.deploymodel.dsl;bundle-version="0.13.0";visibility:=reexport,
  org.eclipse.emf.ecore,
- org.eclipse.emf.common,
+ org.eclipse.xtext.xbase.lib,
  org.antlr.runtime,
- com.google.inject,
- org.eclipse.emf.mwe.core,
+ org.eclipse.xtext.util,
+ org.eclipse.xtend.lib,
  org.eclipse.emf.common,
- org.eclipse.xtext;bundle-version="[2.11.0,2.12.0)",
- org.eclipse.xtext.xbase;bundle-version="[2.11.0,2.12.0)",
- org.eclipse.xtext.ecore;bundle-version="[2.11.0,2.12.0)",
- org.eclipse.xtext.util;bundle-version="[2.11.0,2.12.0)",
- org.eclipse.xtext.xbase.lib;bundle-version="[2.11.0,2.12.0)",
- org.eclipse.xtend.lib;bundle-version="[2.11.0,2.12.0)",
- org.eclipse.core.runtime;bundle-version="3.7.0"
-Export-Package: org.franca.compdeploymodel.core,
- org.franca.compdeploymodel.dsl,
- org.franca.compdeploymodel.dsl.fDeploy,
- org.franca.compdeploymodel.dsl.formatting,
- org.franca.compdeploymodel.dsl.generator,
- org.franca.compdeploymodel.dsl.parser.antlr.internal,
- org.franca.compdeploymodel.dsl.scoping,
- org.franca.compdeploymodel.dsl.services,
- org.franca.compdeploymodel.dsl.validation
-Import-Package: org.apache.log4j
+ org.franca.compmodel.dsl;bundle-version="0.12.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.franca.compdeploymodel.dsl.validation,
+ org.franca.compdeploymodel.dsl.cDeploy.util,
+ org.franca.compdeploymodel.dsl.cDeploy.impl,
+ org.franca.compdeploymodel.dsl.scoping,
+ org.franca.compdeploymodel.dsl.cDeploy,
+ org.franca.compdeploymodel.dsl.generator,
+ org.franca.compdeploymodel.dsl,
+ org.franca.compdeploymodel.dsl.parser.antlr,
+ org.franca.compdeploymodel.dsl.services,
+ org.franca.compdeploymodel.dsl.serializer,
+ org.franca.compdeploymodel.dsl.parser.antlr.internal
+Import-Package: org.apache.log4j

@@ -7,20 +7,20 @@
  */
  package org.franca.compmodel.dsl.validator.tests
 
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.eclipse.xtext.junit4.InjectWith
 import com.google.inject.Inject
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper
+import com.itemis.xtext.testing.XtextRunner2
+import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.util.ParseHelper
-import org.franca.compmodel.dsl.fcomp.FCModel
-import org.eclipselabs.xtext.utils.unittesting.XtextRunner2
-import org.franca.compmodel.dsl.tests.util.MultiInjectorProvider
-import org.franca.compmodel.dsl.fcomp.FcompPackage
-import org.junit.Before
+import org.eclipse.xtext.junit4.validation.ValidationTestHelper
 import org.franca.compmodel.dsl.external.validator.ExternalTestValidator
+import org.franca.compmodel.dsl.fcomp.FCModel
+import org.franca.compmodel.dsl.fcomp.FcompPackage
+import org.franca.compmodel.dsl.tests.util.MultiInjectorProvider
 import org.franca.compmodel.dsl.validation.ValidationRegistryModifier
 import org.junit.After
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(XtextRunner2)
 @InjectWith(MultiInjectorProvider)

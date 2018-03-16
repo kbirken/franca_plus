@@ -1,0 +1,17 @@
+package org.example.deployment
+
+import "platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.cdepl"
+import "../HelloWorldDevices.fcdl"
+import "Client.cdepl"
+
+
+
+define /*network.*/someip for device org.example.HelloClientECU as HelloClientECU {
+	use /*org.example.deployment.*/C1
+	use /*org.example.deployment.*/C2
+
+	adapter EthernetCard on /*network.*/someip {
+		//use org.example.deployment.C2.AnswerMePort
+		AdapterIsDefault = true
+	}
+}

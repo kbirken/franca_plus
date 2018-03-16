@@ -16,10 +16,10 @@ import com.google.inject.Inject
 import org.eclipse.xtext.junit4.validation.ValidationTestHelper
 import org.eclipse.xtext.junit4.util.ParseHelper
 import org.franca.compmodel.dsl.fcomp.FCModel
-import org.eclipselabs.xtext.utils.unittesting.XtextRunner2
 import org.franca.compmodel.dsl.tests.util.MultiInjectorProvider
 import org.franca.compmodel.dsl.fcomp.FcompPackage
 import org.junit.Assert
+import com.itemis.xtext.testing.XtextRunner2
 
 @RunWith(XtextRunner2)
 @InjectWith(MultiInjectorProvider)
