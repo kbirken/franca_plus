@@ -15,7 +15,7 @@ package network
 
 import "architecture_deployment_spec.cdepl"
 
-specification someip extends /*system.*/architecture {
+specification someip extends system.architecture {
 
 	for devices {
 	}
