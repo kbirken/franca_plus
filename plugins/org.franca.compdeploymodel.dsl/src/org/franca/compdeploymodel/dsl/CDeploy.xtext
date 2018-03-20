@@ -28,7 +28,6 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 @Override 
 FDModel:
-	'package' FQN
 	super
 ;
 
