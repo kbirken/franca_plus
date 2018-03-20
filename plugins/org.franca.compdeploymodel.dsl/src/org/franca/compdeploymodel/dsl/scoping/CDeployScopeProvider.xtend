@@ -124,13 +124,7 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 	def IScope scope_FDRootElement_use(FDDevice device, EReference ref) {
 
 		val IScope delegateScope = delegateGetScope(device, ref)
-		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
-			override boolean apply(IEObjectDescription od) {
-				val obj = od.EObjectOrProxy
-				obj instanceof FDService
-			}
-		}
-		new FilteringScope(delegateScope, filter)
+		new FilteringScope(delegateScope, [EObjectOrProxy instanceof FDService])
 	}
 	
 	/**
@@ -150,12 +144,7 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 	def IScope scope_FDRootElement_use(FDVariant variant, EReference ref) {
 
 		val IScope delegateScope = delegateGetScope(variant, ref)
-		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
-			override boolean apply(IEObjectDescription od) {
-				od.EObjectOrProxy instanceof FDDevice 
-			}
-		}
-		new FilteringScope(delegateScope, filter)
+		new FilteringScope(delegateScope, [EObjectOrProxy instanceof FDDevice])
 	}
 	
 	/**
@@ -185,18 +174,15 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 			val pPorts = (adapter.eContainer as FDDevice).use.filter(FDService).map[providedPorts].flatten
 			val rPorts = (adapter.eContainer as FDDevice).use.filter(FDService).map[requiredPorts].flatten
 			val IScope delegateScope = delegateGetScope(adapter, ref)
-			val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
-				override boolean apply(IEObjectDescription od) {
-					val port = od.EObjectOrProxy
-					if (port instanceof FDProvidedPort)
-						pPorts.exists[it == port && haveCompatibleSpecs(adapter, port)]
-					else if (port instanceof FDRequiredPort)
-						rPorts.exists[it == port && haveCompatibleSpecs(adapter, port)]
-					else 
-						false
-				}
-			}
-			new FilteringScope(delegateScope, filter)
+			new FilteringScope(delegateScope, [
+				val port = it.EObjectOrProxy
+				if (port instanceof FDProvidedPort)
+					pPorts.exists[it == port && haveCompatibleSpecs(adapter, port)]
+				else if (port instanceof FDRequiredPort)
+					rPorts.exists[it == port && haveCompatibleSpecs(adapter, port)]
+				else 
+					false
+			])
 		}
 		else
 			IScope::NULLSCOPE
@@ -207,13 +193,7 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 	 */
 	def IScope scope_FDRootElement_use(FDInterface fdif, EReference ref) {
 		val IScope delegateScope = delegateGetScope(fdif, ref)
-		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
-			override boolean apply(IEObjectDescription od) {
-				val obj = od.EObjectOrProxy
-				obj instanceof FDTypes
-			}
-		}
-		new FilteringScope(delegateScope, filter)
+		new FilteringScope(delegateScope, [EObjectOrProxy instanceof FDTypes])
 	}	
 	
 	
@@ -223,16 +203,13 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 	def IScope scope_FDRootElement_use(FDService service, EReference ref) {
 		val componentType = service.target.prototype?.component ?: service.target.target
 		val IScope delegateScope = delegateGetScope(service, ref)
-		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
-			override boolean apply(IEObjectDescription od) {
-				val obj = od.EObjectOrProxy
-				if (obj instanceof FDComponent)
-					obj.target == componentType
-				else 
-					false
-			}
-		}
-		new FilteringScope(delegateScope, filter)
+		new FilteringScope(delegateScope, [
+			val obj = it.EObjectOrProxy
+			if (obj instanceof FDComponent)
+				obj.target==componentType
+			else
+				false
+		])
 	}	
 	
 	/**
@@ -240,13 +217,7 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 	 */
 	def IScope scope_FDRootElement_use(FDComponent component, EReference ref) {
 		val IScope delegateScope = delegateGetScope(component, ref)
-		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
-			override boolean apply(IEObjectDescription od) {
-				val obj = od.EObjectOrProxy
-				obj instanceof FDComponent
-			}
-		}
-		new FilteringScope(delegateScope, filter)
+		new FilteringScope(delegateScope, [EObjectOrProxy instanceof FDComponent])
 	}
 	
 	/**
@@ -254,12 +225,7 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 	 */
 	def IScope scope_FDRootElement_use(FDTypes types, EReference ref) {
 		val IScope delegateScope = delegateGetScope(types, ref)
-		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
-			override boolean apply(IEObjectDescription od) {
-				od.EObjectOrProxy instanceof FDTypes
-			}
-		}
-		new FilteringScope(delegateScope, filter)
+		new FilteringScope(delegateScope, [EObjectOrProxy instanceof FDTypes])
 	}	
 	
 	
@@ -283,18 +249,13 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 	
 	private def IScope filterInterfaceForPort(FDRootElement port, IScope delegateScope, FInterface interfaceType) {
 		val inheritedInterfaces = interfaceType.interfaceInheritationSet
-		
-		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
-			override boolean apply(IEObjectDescription od) {
-				val object = od.EObjectOrProxy
-				if (object instanceof FDInterface)
-					inheritedInterfaces.contains(object.target) 
-					&& haveCompatibleSpecs(port, object) 
-				else 
-					false
-			}
-		}
-		new FilteringScope(delegateScope, filter)
+		new FilteringScope(delegateScope, [
+			val obj = it.EObjectOrProxy
+			if (obj instanceof FDInterface) {
+				inheritedInterfaces.contains(obj.target) && haveCompatibleSpecs(port, obj) 
+			} else 
+				false
+		])
 	}
 
 	// *****************************************************************************
@@ -345,7 +306,7 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 	 * Compatible means either a childs spec parent and child reference the same spec 
 	 * or child spec is derived from parent spec.
 	 */
-	def private haveCompatibleSpecs (FDRootElement parent, FDRootElement child) {
+	def private haveCompatibleSpecs(FDRootElement parent, FDRootElement child) {
 		var parentSpec = parent.spec
 		if (parentSpec === null)
 			parentSpec = getRootElement(parent.eContainer as FDElement)?.spec
