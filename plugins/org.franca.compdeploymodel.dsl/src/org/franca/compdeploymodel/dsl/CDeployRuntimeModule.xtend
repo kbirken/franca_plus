@@ -7,6 +7,7 @@ import com.google.inject.Binder
 import com.google.inject.name.Names
 import org.eclipse.xtext.conversion.IValueConverterService
 import org.eclipse.xtext.formatting.IFormatter
+import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.scoping.IGlobalScopeProvider
 import org.eclipse.xtext.scoping.impl.ImportUriGlobalScopeProvider
 import org.eclipse.xtext.validation.CompositeEValidator
@@ -38,4 +39,7 @@ class CDeployRuntimeModule extends AbstractCDeployRuntimeModule {
 		return FDeployValueConverters
 	}
 
+    override Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
+        CDeployDeclarativeNameProvider
+    }
 }
