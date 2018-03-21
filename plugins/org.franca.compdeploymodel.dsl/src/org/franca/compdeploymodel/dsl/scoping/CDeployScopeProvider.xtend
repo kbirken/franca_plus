@@ -1,6 +1,5 @@
 package org.franca.compdeploymodel.dsl.scoping
 
-import com.google.common.base.Predicate
 import com.google.inject.Inject
 import java.util.ArrayList
 import java.util.List
