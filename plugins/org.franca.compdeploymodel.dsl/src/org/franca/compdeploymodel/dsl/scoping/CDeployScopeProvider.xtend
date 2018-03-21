@@ -180,18 +180,18 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 	 * Limit scope to provided ports defined for used services the context of an adapter of a device
 	 */
 	def IScope scope_FDRootElement_use(FDComAdapter adapter, EReference ref) {
-		if (adapter.eContainer instanceof FDDevice) {
-			val pPorts = (adapter.eContainer as FDDevice).use.filter(FDService).map[providedPorts].flatten
-			val rPorts = (adapter.eContainer as FDDevice).use.filter(FDService).map[requiredPorts].flatten
+		val device = adapter.eContainer
+		if (device instanceof FDDevice) {
+			val pPorts = device.use.filter(FDService).map[providedPorts].flatten
+			val rPorts = device.use.filter(FDService).map[requiredPorts].flatten
 			val IScope delegateScope = delegateGetScope(adapter, ref)
 			new FilteringScope(delegateScope, [
 				val port = it.EObjectOrProxy
-				if (port instanceof FDProvidedPort)
-					pPorts.exists[it == port && haveCompatibleSpecs(adapter, port)]
-				else if (port instanceof FDRequiredPort)
-					rPorts.exists[it == port && haveCompatibleSpecs(adapter, port)]
-				else 
-					false
+				switch (port) {
+					FDProvidedPort: pPorts.exists[it==port && haveCompatibleSpecs(adapter, port)]
+					FDRequiredPort: rPorts.exists[it==port && haveCompatibleSpecs(adapter, port)]
+					default: false
+				}
 			])
 		}
 		else
