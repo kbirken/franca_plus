@@ -13,10 +13,9 @@
 
 package network
 
-import "Platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.cdepl"
+import "architecture_deployment_spec.cdepl"
 
-
-specification can extends /*system.*/architecture {
+specification can extends system.architecture {
 
 	for attributes{
 		AttributeToPDU: String (optional);
