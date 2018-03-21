@@ -11,7 +11,7 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.scoping.IGlobalScopeProvider
 import org.eclipse.xtext.scoping.impl.ImportUriGlobalScopeProvider
 import org.eclipse.xtext.validation.CompositeEValidator
-import org.franca.deploymodel.dsl.formatting.FDeployFormatter
+import org.franca.compdeploymodel.dsl.formatting.CDeployFormatter
 import org.franca.deploymodel.dsl.valueconverter.FDeployValueConverters
 
 /**
@@ -32,7 +32,7 @@ class CDeployRuntimeModule extends AbstractCDeployRuntimeModule {
 	}
 
 	override Class<? extends IFormatter> bindIFormatter() {
-		return FDeployFormatter
+		return CDeployFormatter
 	}
 
 	override Class<? extends IValueConverterService> bindIValueConverterService() {
