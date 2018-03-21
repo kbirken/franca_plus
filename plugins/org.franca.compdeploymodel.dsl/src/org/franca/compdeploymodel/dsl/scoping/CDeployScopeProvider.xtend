@@ -73,7 +73,18 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 
 	def private IScope getPropertyDecls(FDElement elem) {
 		val root = getRootElement(elem)
-		PropertyMappings::getAllPropertyDecls(root.getSpec(), elem).scopeFor
+		val spec = 
+			if (root.spec===null) {
+				// no specification defined in direct root, use parent root's element specification
+				// (this is an extension by CDeploy, FDeploy doesn't allow nested FDRootElements)
+				getRootElement(root.eContainer as FDElement)?.spec
+			} else
+				root.spec
+
+		if (spec !== null)
+			PropertyMappings::getAllPropertyDecls(spec, elem).scopeFor
+		else
+			IScope::NULLSCOPE
 	}
 
 	// *****************************************************************************
