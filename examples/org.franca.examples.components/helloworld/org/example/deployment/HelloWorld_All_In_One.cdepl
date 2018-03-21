@@ -9,7 +9,7 @@ import "../HelloWorldTypes.fidl"
 import "../HelloWorldDevices.fcdl"
 
 // deployment for types
-define /*network.*/someip for typeCollection org.example as HelloWorldTypesDeployment {
+define network.someip for typeCollection org.example as HelloWorldTypesDeployment {
 	enumeration Location { 
 		EnumBackingType = UInt32
 	}
@@ -45,13 +45,16 @@ define network.someip for interface org.example.HelloWorld2 as SomeIpDeployment4
 		SomeIpGetterID = 6
 		SomeIpNotifierID = 7
 		SomeIpNotifierEventGroups = { 1 }
+		SomeIpSetterID = 0
 		# {
 			SomeIpArrayLengthWidth = 13
 		}
 	}
-	method sayHello {
-		SomeIpMethodID = 4
-	}
+	
+	// TODO: Shouldn't sayHello be deployed by "use" of a deployment of the HelloWorld interface? 
+//	method sayHello {
+//		SomeIpMethodID = 4
+//	}
 }
 
 define network.can for interface org.example.HelloWorld2 as CanDeployment4Helloworld2 {
@@ -63,9 +66,7 @@ define network.can for interface org.example.HelloWorld2 as CanDeployment4Hellow
 		out {
 			request {
 				ArgumentToBusSignals = { "IS_THERE_SIG" }
-
 			}
-			
 		}
 	}
 }
@@ -95,8 +96,8 @@ define network.someip for component org.example.HelloWorldServer {
 // deployment for the component type 
 define network.someip for component org.example.HelloWorldServer as ServiceComponentDeployment  {
 	provide AskMePort on network.someip {
-		// use org.example.deployment.SomeIpDeployment4HelloWorld2
-		use org.example.deployment.HelloWorld_depl
+		use org.example.deployment.SomeIpDeployment4HelloWorld2
+		//use org.example.deployment.HelloWorld_depl
 	}
 	
 	 provide AskMePortCan on network.can {
@@ -107,10 +108,10 @@ define network.someip for component org.example.HelloWorldServer as ServiceCompo
 /*
  * here starts the deployment of defined service component instances
  */
-define /*network.*/someip for service World.Room1.Service as Service {
-	//use org.example.deployment.ServiceComponentDeployment
+define network.someip for service World.Room1.Service as Service {
+	use org.example.deployment.ServiceComponentDeployment
 	StartupAtSystemInit = true
-	provide AskMePort {	
+	provide AskMePort {
 		use org.example.deployment.SomeIpDeployment4HelloWorld2
 		SomeIpInstanceID = 1
         SomeIpReliableUnicastPort = 30506
@@ -120,11 +121,11 @@ define /*network.*/someip for service World.Room1.Service as Service {
 }
 
 // optional deployment for a hosted client instances
-define /*system.*/architecture for service World.Room1.Client1 as Client1 {
-	require AnswerMePort on /*network.*/someip
+define system.architecture for service World.Room1.Client1 as Client1 {
+	require AnswerMePort on network.someip
 }    
 
-define /*system.*/architecture for service World.Room2.Client2 as Client2
+define system.architecture for service World.Room2.Client2 as Client2
 
 // deployment of the server ECU with partitioning of Service to device by "use"
 define system.architecture for device org.example.HelloServerECU as ServerECU {
@@ -159,3 +160,4 @@ define variant AIO for root World {
 	use org.example.deployment.HellorClientECU
 	use org.example.deployment.ServerECU
 }
+

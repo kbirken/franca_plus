@@ -11,18 +11,19 @@ import "../HelloGalaxy.fcdl"
 
 
 
-define /*network.*/someip for component org.example.Galaxy as MyGalaxyComponentDeployment {
-	provide HalloGalaxy on /*network.*/someip
+define network.someip for component org.example.Galaxy as MyGalaxyComponentDeployment {
+	provide HalloGalaxy on network.someip
 }
 
 define network.someip for service Galaxy as MyGalaxyDeployment {
-	use org.example.deployment.MyGalaxyComponentDeployment
+	use MyGalaxyComponentDeployment
 }
 
 define network.someip for device org.example.HelloServerECU as HelloServerECU {
-	use org.example.deployment.MyGalaxyDeployment
+	use MyGalaxyDeployment
 } 
 
 define variant Variant for root Galaxy {
-	use org.example.deployment.HelloServerECU
+	// TODO: variant elements don't have a specification - what does "use" mean in that context?
+	use HelloServerECU
 }

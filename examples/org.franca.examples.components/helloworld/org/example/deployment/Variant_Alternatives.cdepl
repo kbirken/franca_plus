@@ -1,10 +1,10 @@
 package org.example.alternative
 
-import "platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.fdepl"
-import "platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.fdepl"
+import "platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.cdepl"
+import "platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.cdepl"
 import "../HelloWorld.fcdl"
 import "../HelloWorldDevices.fcdl"
-import "Client.fdepl"
+import "Client.cdepl"
 
 // a combined variant deployment of otherwise predefined ServerECU and locally defined alternative
 // Client service and ClientECU
@@ -26,4 +26,3 @@ define variant AIA for root World {
 	use	org.example.alternative.HelloClientECU_BIG
 	use org.example.alternative.HelloServerECU
 }
-

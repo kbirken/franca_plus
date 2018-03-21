@@ -5,12 +5,11 @@ import "../HelloWorldDevices.fcdl"
 import "Client.cdepl"
 
 
+define network.someip for device org.example.HelloClientECU as HelloClientECU {
+	use org.example.deployment.C1
+	use org.example.deployment.C2
 
-define /*network.*/someip for device org.example.HelloClientECU as HelloClientECU {
-	use /*org.example.deployment.*/C1
-	use /*org.example.deployment.*/C2
-
-	adapter EthernetCard on /*network.*/someip {
+	adapter EthernetCard on network.someip {
 		//use org.example.deployment.C2.AnswerMePort
 		AdapterIsDefault = true
 	}

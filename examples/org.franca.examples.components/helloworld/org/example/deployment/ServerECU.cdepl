@@ -1,8 +1,8 @@
 package org.example.deployment
 
-import "platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.fdepl"
-import "platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.fdepl"
-import "Service.fdepl"
+import "platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.cdepl"
+import "platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.cdepl"
+import "Service.cdepl"
 import "../HelloWorldDevices.fcdl"
 
 define system.architecture for device org.example.HelloServerECU as HelloServerECU {
@@ -13,3 +13,4 @@ define system.architecture for device org.example.HelloServerECU as HelloServerE
 		SomeIpUnicastAddress = "127.0.0.1"
 	}
 }
+

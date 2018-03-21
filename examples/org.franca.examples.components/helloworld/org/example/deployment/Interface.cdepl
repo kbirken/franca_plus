@@ -1,6 +1,6 @@
 package org.example.deployment
 
-import "platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.cdepl"
 
 import "classpath:/org/example/HelloWorld.fidl"
 import "../HelloWorldTypes.fidl"
@@ -37,7 +37,8 @@ define network.someip for interface org.example.HelloWorld2 as SomeIpDeployment4
 		SomeIpEventGroups = { 1 }
 	}
 	attribute knownPeople {
-		AttributeNotifierUpdateMode = Cyclic
+		//AttributeNotifierUpdateMode = Cyclic
+		SomeIpSetterID = 0
 		SomeIpGetterID = 6
 		SomeIpNotifierID = 7
 		SomeIpNotifierEventGroups = { 1 }
