@@ -1,14 +1,37 @@
+/*******************************************************************************
+ * Copyright (c) 2018 itemis AG (http://www.itemis.de).
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
 package org.franca.compdeploymodel.dsl
 
 import java.util.Collection
 import java.util.Map
 import org.eclipse.emf.ecore.EClass
 import org.franca.compdeploymodel.dsl.cDeploy.CDeployPackage
-import org.franca.deploymodel.dsl.fDeploy.FDeployPackage
-import org.franca.deploymodel.extensions.IFDeployExtension
+import org.franca.deploymodel.extensions.AbstractFDeployExtension
 
-class CompDeployExtension implements IFDeployExtension {
+import static org.franca.deploymodel.extensions.IFDeployExtension.AccessorArgumentStyle.*
+
+/**
+ * Implementation of CDeploy deployment extension.</p>
+ * 
+ * This class registers new deployment hosts and some rules for these hosts.
+ * This is the glue between new grammar rules and metamodel class of CDeploy.xtext
+ * and the existing logic of Franca deployment.</p>
+ * 
+ * It will be registered at the IDE via a normal Eclipse extension point.</p>
+ * 
+ * @author Klaus Birken (itemis AG) 
+ */
+class CompDeployExtension extends AbstractFDeployExtension {
 	
+	override getShortDescription() {
+		"component deployment"
+	}
+
 	val attribute_setters = new Host("attribute_setters")
 	val attribute_getters = new Host("attribute_getters")
 	val attribute_notifiers = new Host("attribute_notifiers")
@@ -19,45 +42,38 @@ class CompDeployExtension implements IFDeployExtension {
 	val devices = new Host("devices")
 	val variants = new Host("variants")
 	val adapters = new Host("adapters")
-	
-	override getShortDescription() {
-		"component deployment"
-	}
-
-	override Collection<RootDef> getRoots() {
-		#[ ]
-	}
 
 	override Map<EClass, Collection<Host>> getAdditionalHosts() {
 		#{
-			// extend FDAttribute hosts
-			FDeployPackage.eINSTANCE.FDAttribute -> #[
+			// add hosts for existing FDeploy rules
+			fdeploy.getFDAttribute -> #[
 				attribute_setters, attribute_getters, attribute_notifiers
 			],
 			
 			// add hosts for all cdepl elements
-			CDeployPackage.eINSTANCE.FDComponent -> #[  // TODO: check if correct! Use FDComponentInstance instead?
-				components
-			],
-			CDeployPackage.eINSTANCE.FDService -> #[
-				services
-			],
-			CDeployPackage.eINSTANCE.FDProvidedPort -> #[
-				provided_ports
-			],
-			CDeployPackage.eINSTANCE.FDRequiredPort -> #[
-				required_ports
-			],
-			CDeployPackage.eINSTANCE.FDDevice -> #[
-				devices
-			],
-			CDeployPackage.eINSTANCE.FDVariant -> #[
-				variants
-			],
-			CDeployPackage.eINSTANCE.FDComAdapter -> #[
-				adapters
-			]
+			cdeploy.FDComponent    -> #[ components ], // TODO: Correct? Use FDComponentInstance instead?
+			cdeploy.FDService      -> #[ services ],
+			cdeploy.FDProvidedPort -> #[ provided_ports ],
+			cdeploy.FDRequiredPort -> #[ required_ports ],
+			cdeploy.FDDevice       -> #[ devices ],
+			cdeploy.FDVariant      -> #[ variants ],
+			cdeploy.FDComAdapter   -> #[ adapters ]
 		}
 	}
 
+	/**
+	 * Define how the deployment elements are identified by generated property accessors.</p>
+	 * 
+	 * Note that all EClasses not mentioned here will use the default BY_RULE_CLASS,
+	 * i.e., the argument type of the property accessor will be the EClass itself. 
+	 */
+	override Map<EClass, AccessorArgumentStyle> getAccessorArgumentTypes() {
+		#{
+			fdeploy.FDAttribute -> BY_TARGET_FEATURE
+		}
+	}
+
+	/** Helper function for easy access to CDeploy EClasses. */
+	def private cdeploy() { CDeployPackage.eINSTANCE }
+		
 }
