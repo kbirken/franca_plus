@@ -8,12 +8,10 @@
 package org.franca.compdeploymodel.dsl
 
 import java.util.Collection
-import java.util.Map
-import org.eclipse.emf.ecore.EClass
 import org.franca.compdeploymodel.dsl.cDeploy.CDeployPackage
 import org.franca.deploymodel.extensions.AbstractFDeployExtension
 
-import static org.franca.deploymodel.extensions.IFDeployExtension.AccessorArgumentStyle.*
+import static org.franca.deploymodel.extensions.IFDeployExtension.HostMixinDef.AccessorArgumentStyle.*
 
 /**
  * Implementation of CDeploy deployment extension.</p>
@@ -43,37 +41,24 @@ class CompDeployExtension extends AbstractFDeployExtension {
 	val variants = new Host("variants")
 	val adapters = new Host("adapters")
 
-	override Map<EClass, Collection<Host>> getAdditionalHosts() {
-		#{
-			// add hosts for existing FDeploy rules
-			fdeploy.getFDAttribute -> #[
-				attribute_setters, attribute_getters, attribute_notifiers
-			],
-			
-			// add hosts for all cdepl elements
-			cdeploy.FDComponent    -> #[ components ], // TODO: Correct? Use FDComponentInstance instead?
-			cdeploy.FDService      -> #[ services ],
-			cdeploy.FDProvidedPort -> #[ provided_ports ],
-			cdeploy.FDRequiredPort -> #[ required_ports ],
-			cdeploy.FDDevice       -> #[ devices ],
-			cdeploy.FDVariant      -> #[ variants ],
-			cdeploy.FDComAdapter   -> #[ adapters ]
-		}
-	}
+	override Collection<HostMixinDef> getMixins() {
+		#[
+			// add host mixin for existing FDeploy rules
+			mixin(fdeploy.getFDAttribute, BY_TARGET_FEATURE,
+				#[ attribute_setters, attribute_getters, attribute_notifiers ]
+			),
 
-	/**
-	 * Define how the deployment elements are identified by generated property accessors.</p>
-	 * 
-	 * Note that all EClasses not mentioned here will use the default BY_RULE_CLASS,
-	 * i.e., the argument type of the property accessor will be the EClass itself. 
-	 */
-	override Map<EClass, AccessorArgumentStyle> getAccessorArgumentTypes() {
-		#{
-			fdeploy.FDAttribute -> BY_TARGET_FEATURE
-		}
+			// add host mixins for all cdepl elements
+			mixin(cdeploy.FDComponent,    BY_RULE_CLASS, #[ components ]), // TODO: Correct? Use FDComponentInstance instead?
+			mixin(cdeploy.FDService,      BY_RULE_CLASS, #[ services ]),
+			mixin(cdeploy.FDProvidedPort, BY_RULE_CLASS, #[ provided_ports ]),
+			mixin(cdeploy.FDRequiredPort, BY_RULE_CLASS, #[ required_ports ]),
+			mixin(cdeploy.FDDevice,       BY_RULE_CLASS, #[ devices ]),
+			mixin(cdeploy.FDVariant,      BY_RULE_CLASS, #[ variants ]),
+			mixin(cdeploy.FDComAdapter,   BY_RULE_CLASS, #[ adapters ])
+		]
 	}
 
 	/** Helper function for easy access to CDeploy EClasses. */
 	def private cdeploy() { CDeployPackage.eINSTANCE }
-		
 }
