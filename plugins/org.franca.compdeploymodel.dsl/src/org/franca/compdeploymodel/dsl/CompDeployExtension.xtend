@@ -12,6 +12,7 @@ import org.franca.compdeploymodel.dsl.cDeploy.CDeployPackage
 import org.franca.deploymodel.extensions.AbstractFDeployExtension
 
 import static org.franca.deploymodel.extensions.IFDeployExtension.HostMixinDef.AccessorArgumentStyle.*
+import static org.franca.deploymodel.extensions.IFDeployExtension.HostMixinDef.AccessorScope.*
 
 /**
  * Implementation of CDeploy deployment extension.</p>
@@ -44,18 +45,18 @@ class CompDeployExtension extends AbstractFDeployExtension {
 	override Collection<HostMixinDef> getMixins() {
 		#[
 			// add host mixin for existing FDeploy rules
-			mixin(fdeploy.getFDAttribute, BY_TARGET_FEATURE,
+			mixin(fdeploy.getFDAttribute, BY_TARGET_FEATURE, FRANCA_IDL,
 				#[ attribute_setters, attribute_getters, attribute_notifiers ]
 			),
 
 			// add host mixins for all cdepl elements
-			mixin(cdeploy.FDComponent,    BY_RULE_CLASS, #[ components ]), // TODO: Correct? Use FDComponentInstance instead?
-			mixin(cdeploy.FDService,      BY_RULE_CLASS, #[ services ]),
-			mixin(cdeploy.FDProvidedPort, BY_RULE_CLASS, #[ provided_ports ]),
-			mixin(cdeploy.FDRequiredPort, BY_RULE_CLASS, #[ required_ports ]),
-			mixin(cdeploy.FDDevice,       BY_RULE_CLASS, #[ devices ]),
-			mixin(cdeploy.FDVariant,      BY_RULE_CLASS, #[ variants ]),
-			mixin(cdeploy.FDComAdapter,   BY_RULE_CLASS, #[ adapters ])
+			mixin(cdeploy.FDComponent,    BY_RULE_CLASS, NON_FRANCA_IDL, #[ components ]), // TODO: Correct? Use FDComponentInstance instead?
+			mixin(cdeploy.FDService,      BY_RULE_CLASS, NON_FRANCA_IDL, #[ services ]),
+			mixin(cdeploy.FDProvidedPort, BY_RULE_CLASS, NON_FRANCA_IDL, #[ provided_ports ]),
+			mixin(cdeploy.FDRequiredPort, BY_RULE_CLASS, NON_FRANCA_IDL, #[ required_ports ]),
+			mixin(cdeploy.FDDevice,       BY_RULE_CLASS, NON_FRANCA_IDL, #[ devices ]),
+			mixin(cdeploy.FDVariant,      BY_RULE_CLASS, NON_FRANCA_IDL, #[ variants ]),
+			mixin(cdeploy.FDComAdapter,   BY_RULE_CLASS, NON_FRANCA_IDL, #[ adapters ])
 		]
 	}
 
