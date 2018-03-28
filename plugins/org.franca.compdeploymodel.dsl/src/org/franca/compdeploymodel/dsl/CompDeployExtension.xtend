@@ -12,7 +12,6 @@ import org.franca.compdeploymodel.dsl.cDeploy.CDeployPackage
 import org.franca.deploymodel.extensions.AbstractFDeployExtension
 
 import static org.franca.deploymodel.extensions.IFDeployExtension.HostMixinDef.AccessorArgumentStyle.*
-import static org.franca.deploymodel.extensions.IFDeployExtension.HostMixinDef.AccessorScope.*
 
 /**
  * Implementation of CDeploy deployment extension.</p>
@@ -45,18 +44,32 @@ class CompDeployExtension extends AbstractFDeployExtension {
 	override Collection<HostMixinDef> getMixins() {
 		#[
 			// add host mixin for existing FDeploy rules
-			mixin(fdeploy.getFDAttribute, BY_TARGET_FEATURE, FRANCA_IDL,
+			mixin(fdeploy.getFDAttribute, BY_TARGET_FEATURE,
 				#[ attribute_setters, attribute_getters, attribute_notifiers ]
 			),
 
 			// add host mixins for all cdepl elements
-			mixin(cdeploy.FDComponent,    BY_RULE_CLASS, NON_FRANCA_IDL, #[ components ]), // TODO: Correct? Use FDComponentInstance instead?
-			mixin(cdeploy.FDService,      BY_RULE_CLASS, NON_FRANCA_IDL, #[ services ]),
-			mixin(cdeploy.FDProvidedPort, BY_RULE_CLASS, NON_FRANCA_IDL, #[ provided_ports ]),
-			mixin(cdeploy.FDRequiredPort, BY_RULE_CLASS, NON_FRANCA_IDL, #[ required_ports ]),
-			mixin(cdeploy.FDDevice,       BY_RULE_CLASS, NON_FRANCA_IDL, #[ devices ]),
-			mixin(cdeploy.FDVariant,      BY_RULE_CLASS, NON_FRANCA_IDL, #[ variants ]),
-			mixin(cdeploy.FDComAdapter,   BY_RULE_CLASS, NON_FRANCA_IDL, #[ adapters ])
+			mixin(cdeploy.FDComponent,    BY_RULE_CLASS, "Component",
+				#[ components ] 
+			), // TODO: Correct? Use FDComponentInstance instead?
+			mixin(cdeploy.FDService,      BY_RULE_CLASS, "Service",
+				#[ services ]
+			),
+			mixin(cdeploy.FDProvidedPort, BY_RULE_CLASS, HostMixinDef.CHILD_ELEMENT,
+				#[ provided_ports ]
+			),
+			mixin(cdeploy.FDRequiredPort, BY_RULE_CLASS, HostMixinDef.CHILD_ELEMENT,
+				#[ required_ports ]
+			),
+			mixin(cdeploy.FDDevice,       BY_RULE_CLASS, "Device",
+				#[ devices ]
+			),
+			mixin(cdeploy.FDComAdapter,   BY_RULE_CLASS, HostMixinDef.CHILD_ELEMENT,
+				#[ adapters ]
+			),
+			mixin(cdeploy.FDVariant,      BY_RULE_CLASS, "Variant",
+				#[ variants ]
+			)
 		]
 	}
 
