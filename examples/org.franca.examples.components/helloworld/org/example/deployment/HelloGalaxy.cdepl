@@ -24,6 +24,6 @@ define network.someip for device org.example.HelloServerECU as HelloServerECU {
 } 
 
 define variant Variant for root Galaxy {
-	// TODO: variant elements don't have a specification - what does "use" mean in that context?
+	// although a variant doesn't have a specification itself, it is built from one or more deployed devices
 	use HelloServerECU
 }
