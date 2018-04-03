@@ -59,8 +59,10 @@ FDDevice:
 	'for' 'device' target=[fcomp::FCDevice|FQN] ('as' name = ID)?
 	('{'
 		('use' use+=[FDService|FQN])*
+		
 		(adapters+=FDComAdapter)*
-		// the own properties of this service
+		
+		// the own properties of this device
 		properties=FDPropertySet
 	'}')?;
 
