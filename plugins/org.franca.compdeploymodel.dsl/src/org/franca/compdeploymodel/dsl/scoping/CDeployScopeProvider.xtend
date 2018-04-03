@@ -28,7 +28,7 @@ import org.franca.deploymodel.core.PropertyMappings
 import org.franca.deploymodel.dsl.fDeploy.FDElement
 import org.franca.deploymodel.dsl.fDeploy.FDInterface
 import org.franca.deploymodel.dsl.fDeploy.FDRootElement
-import org.franca.deploymodel.dsl.fDeploy.FDTypes
+import org.franca.deploymodel.dsl.fDeploy.FDSpecification
 
 import static org.franca.deploymodel.core.FDModelUtils.*
 
@@ -73,19 +73,28 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 
 	def private IScope getPropertyDecls(FDElement elem) {
 		val root = getRootElement(elem)
-		val spec = 
-			if (root.spec===null) {
-				// no specification defined in direct root, use parent root's element specification
-				// (this is an extension by CDeploy, FDeploy doesn't allow nested FDRootElements)
-				getRootElement(root.eContainer as FDElement)?.spec
-			} else
-				root.spec
+		val spec = root.actualSpec
 
 		if (spec !== null)
 			PropertyMappings::getAllPropertyDecls(spec, elem).scopeFor
 		else
 			IScope::NULLSCOPE
 	}
+
+	/**
+	 * Get the deployment specification for a definition root element.</p>
+	 * 
+	 * In standard Franca deployment, each root element will have its own root.
+	 * However, in CDeploy, nested root elements might be defined. If a nested
+	 * root element doesn't have its own spec, it will use its parent's spec.
+	 */
+	def private FDSpecification getActualSpec(FDRootElement elem) {
+		if (elem.spec!==null)
+			elem.spec
+		else
+			getRootElement(elem.eContainer as FDElement)?.spec
+	}
+
 
 	// *****************************************************************************
 
@@ -188,8 +197,8 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 			new FilteringScope(delegateScope, [
 				val port = it.EObjectOrProxy
 				switch (port) {
-					FDProvidedPort: pPorts.exists[it==port && haveCompatibleSpecs(adapter, port)]
-					FDRequiredPort: rPorts.exists[it==port && haveCompatibleSpecs(adapter, port)]
+					FDProvidedPort: pPorts.exists[it==port && haveCompatibleSpecs(adapter, port, [actualSpec])]
+					FDRequiredPort: rPorts.exists[it==port && haveCompatibleSpecs(adapter, port, [actualSpec])]
 					default: false
 				}
 			])
@@ -197,14 +206,6 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 		else
 			IScope::NULLSCOPE
 	}
-	
-	/**
-	 * Limit scope to deployed type collections in an interface deployment context
-	 */
-	def IScope scope_FDRootElement_use(FDInterface fdif, EReference ref) {
-		val IScope delegateScope = delegateGetScope(fdif, ref)
-		new FilteringScope(delegateScope, [EObjectOrProxy instanceof FDTypes])
-	}	
 	
 	
 	/**
@@ -230,14 +231,6 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 		new FilteringScope(delegateScope, [EObjectOrProxy instanceof FDComponent])
 	}
 	
-	/**
-	 * Limit scope to types deployments in a typeCollection context
-	 */
-	def IScope scope_FDRootElement_use(FDTypes types, EReference ref) {
-		val IScope delegateScope = delegateGetScope(types, ref)
-		new FilteringScope(delegateScope, [EObjectOrProxy instanceof FDTypes])
-	}	
-	
 	
 	/**
 	 * Scope available interface deployments in required port deployment to fitting interfaces
@@ -262,7 +255,7 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 		new FilteringScope(delegateScope, [
 			val obj = it.EObjectOrProxy
 			if (obj instanceof FDInterface) {
-				inheritedInterfaces.contains(obj.target) && haveCompatibleSpecs(port, obj) 
+				inheritedInterfaces.contains(obj.target) && haveCompatibleSpecs(port, obj, [actualSpec]) 
 			} else 
 				false
 		])
@@ -308,29 +301,6 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 			component = instance.prototype.component
 		FCompUtils::collectInheritedPorts(component, FCPortKind.PROVIDED, ports)
 		ports.scopeFor
-	}
-
-
-
-	/*
-	 * Compatible means either a childs spec parent and child reference the same spec 
-	 * or child spec is derived from parent spec.
-	 */
-	def private haveCompatibleSpecs(FDRootElement parent, FDRootElement child) {
-		var parentSpec = parent.spec
-		if (parentSpec === null)
-			parentSpec = getRootElement(parent.eContainer as FDElement)?.spec
-		
-		var check = child.spec
-		if (check === null)
-			check = getRootElement(child.eContainer as FDElement)?.spec
-		
-		while (check !== null) {
-			if (parentSpec == check)
-				return true
-			check = check.base
-		} 
-		return false
 	}
 
 }
