@@ -19,7 +19,7 @@ define network.someip for typeCollection org.example as HelloWorldTypesDeploymen
 }
 
 // deployment for the interface type for some/ip
-define network.someip for interface org.example.HelloWorld {
+define network.someip for interface org.example.HelloWorld as SomeIpDeployment4HelloWorld {
 	use org.example.deployment.HelloWorldTypesDeployment
 	
 	SomeIpServiceID = 124
@@ -33,6 +33,8 @@ define network.someip for interface org.example.HelloWorld {
 
 // deployment for the interface type for some/ip
 define network.someip for interface org.example.HelloWorld2 as SomeIpDeployment4HelloWorld2 {
+	use SomeIpDeployment4HelloWorld
+	
 	SomeIpServiceID = 123
 
 	broadcast isThereSomeBody {
@@ -50,11 +52,6 @@ define network.someip for interface org.example.HelloWorld2 as SomeIpDeployment4
 			SomeIpArrayLengthWidth = 13
 		}
 	}
-	
-	// TODO: Shouldn't sayHello be deployed by "use" of a deployment of the HelloWorld interface? 
-//	method sayHello {
-//		SomeIpMethodID = 4
-//	}
 }
 
 define network.can for interface org.example.HelloWorld2 as CanDeployment4Helloworld2 {
