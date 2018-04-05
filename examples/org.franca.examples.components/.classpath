@@ -10,5 +10,6 @@
 	<classpathentry kind="src" path="misc"/>
 	<classpathentry kind="src" path=".project"/>
 	<classpathentry kind="src" path=".classpath"/>
+	<classpathentry kind="src" path="src-gen"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
