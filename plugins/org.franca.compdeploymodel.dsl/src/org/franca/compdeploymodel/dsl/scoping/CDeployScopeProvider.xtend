@@ -47,6 +47,10 @@ class CDeployScopeProvider extends AbstractCDeployScopeProvider {
 
 	// *****************************************************************************
 
+	def scope_FDProperty_decl(FDComponent owner, EReference ref) {
+		owner.getPropertyDecls
+	}
+		
 	def scope_FDProperty_decl(FDService owner, EReference ref) {
 		owner.getPropertyDecls
 	}
