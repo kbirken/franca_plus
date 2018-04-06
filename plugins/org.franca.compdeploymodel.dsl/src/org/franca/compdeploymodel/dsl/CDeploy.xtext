@@ -60,10 +60,10 @@ FDDevice:
 	('{'
 		('use' use+=[FDService|FQN])*
 		
-		(adapters+=FDComAdapter)*
-		
 		// the own properties of this device
 		properties=FDPropertySet
+
+		(adapters+=FDComAdapter)*
 	'}')?;
 
 FDComponentInstance:
