@@ -51,7 +51,7 @@ class CompDeployExtension extends AbstractFDeployExtension {
 			// add host mixins for all cdepl elements
 			mixin(cdeploy.FDComponent,    BY_RULE_CLASS, "Component",
 				#[ components ] 
-			), // TODO: Correct? Use FDComponentInstance instead?
+			),
 			mixin(cdeploy.FDService,      BY_RULE_CLASS, "Service",
 				#[ services ]
 			),
