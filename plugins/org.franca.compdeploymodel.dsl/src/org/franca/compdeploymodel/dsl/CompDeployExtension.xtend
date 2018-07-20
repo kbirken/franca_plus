@@ -30,13 +30,16 @@ class CompDeployExtension extends AbstractFDeployExtension {
 		"component deployment"
 	}
 
+	val public static REQUIRED_PORTS = "required_ports"
+	val public static PROVIDED_PORTS = "provided_ports"
+	
 	val attribute_setters = new Host("attribute_setters")
 	val attribute_getters = new Host("attribute_getters")
 	val attribute_notifiers = new Host("attribute_notifiers")
 	val components = new Host("components")
 	val services = new Host("services")
-	val required_ports = new Host("required_ports")
-	val provided_ports = new Host("provided_ports")
+	val required_ports = new Host(REQUIRED_PORTS)
+	val provided_ports = new Host(PROVIDED_PORTS)
 	val devices = new Host("devices")
 	val variants = new Host("variants")
 	val adapters = new Host("adapters")
